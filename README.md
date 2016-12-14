@@ -20,5 +20,11 @@ file.
 Or:
 
 ```bash
+./wizard run a marathon
+```
+
+Or:
+
+```bash
 ./wizard where is my pizza
 ```

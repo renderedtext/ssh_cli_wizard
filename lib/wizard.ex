@@ -12,7 +12,7 @@ defmodule Wizard do
       if job |> Map.get("commands") |> Map.has_key?(command_set) do
        Parser.commands(job, command_set) |> Runner.execute
       else
-        IO.puts "These are not the droids you're looking for"
+        IO.puts "These are not the droids you're looking for. There are no such commands."
       end
     else
       IO.puts "You can only run commands. This is not a drill."
