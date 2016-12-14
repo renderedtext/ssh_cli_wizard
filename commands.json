@@ -1,0 +1,92 @@
+"commands": {
+      "job_setup_commands": [
+              {
+                        "index": 0,
+                                "command_string": "bundle config mirror.https://rubygems.org https://rubygems.semaphoreci.com",
+                                        "command_hash": null
+                                                },
+            {
+                      "index": 1,
+                              "command_string": "bundle config mirror.http://rubygems.org http://rubygems.semaphoreci.com",
+                                      "command_hash": null
+                                              },
+                  {
+                            "index": 2,
+                                    "command_string": "{ timeout 7 gem sources --backtrace -a https://rubygems.semaphoreci.com && timeout 7 gem sources --backtrace -r https://rubygems.org/ ;} || true",
+                                            "command_hash": null
+                                                    },
+                        {
+                                  "index": 3,
+                                          "command_string": "export SEMAPHORE_TRIGGER_SOURCE='push'",
+                                                  "command_hash": null
+                                                          },
+                              {
+                                        "index": 4,
+                                                "command_string": "if [ -f '/home/runner/cucumber_booster' ]; then sudo mv ~/cucumber_booster /usr/bin/cucumber_booster && sudo chmod +x /usr/bin/cucumber_booster; fi",
+                                                        "command_hash": null
+                                                                },
+                                    {
+                                              "index": 5,
+                                                      "command_string": "if [ -f '/home/runner/rspec_booster' ]; then sudo mv ~/rspec_booster /usr/bin/rspec_booster && sudo chmod +x /usr/bin/rspec_booster; fi",
+                                                              "command_hash": null
+                                                                      },
+                                          {
+                                                    "index": 7,
+                                                            "command_string": "cucumber-booster-config inject .",
+                                                                    "command_hash": null
+                                                                            },
+                                                {
+                                                          "index": 8,
+                                                                  "command_string": "export SPEC_OPTS=\"--format documentation --format json --out rspec_report.json\"",
+                                                                          "command_hash": null
+                                                                                  }
+          ],
+                "build_setup_commands": [
+                        {
+                                  "index": 0,
+                                          "command_string": "./script/debugger_in_tests",
+                                                  "command_hash": "5717225e-22f5-4bde-bd71-d797ce22047c"
+                                                          },
+                      {
+                                "index": 1,
+                                        "command_string": "./script/setup",
+                                                "command_hash": "17cd9256-675a-4001-baec-5eb5a2687610"
+                                                        }
+              ],
+                    "build_commands": [
+                            {
+                                      "index": 0,
+                                              "command_string": "cucumber_booster --thread 3",
+                                                      "command_hash": "ff42af62-c0e7-4700-aaaf-6e4647b28a50"
+                                                              }
+                  ],
+                        "post_build_commands": [
+                                {
+                                          "index": 0,
+                                                  "command_string": "bundle clean",
+                                                          "command_hash": "8e6c5c8f-9bc1-44a4-ba7e-5f5d1a448ba8"
+                                                                  },
+                              {
+                                        "index": 1,
+                                                "command_string": "./script/compress-assets-cache.sh",
+                                                        "command_hash": "97f35484-d896-4fb1-bbfd-5a232beb41df"
+                                                                }
+                      ],
+                            "teardown_commands": [
+                                    {
+                                              "index": 0,
+                                                      "command_string": "[ -s \"cucumber_report.json\" ] && http POST 'https://insights-receiver.semaphoreci.com/job_reports?job_hash_id=4a44f833-e319-4105-a9d2-05a8aaaa1748&build_hash_id=16b2aaea-d20f-41fc-b316-2493860e5e8a&project_hash_id=72a608c6-7f66-4413-9162-837ab55f7e7b' cucumber:=@cucumber_report.json || true",
+                                                              "command_hash": null
+                                                                      },
+                                  {
+                                            "index": 1,
+                                                    "command_string": "[ -s \"rspec_report.json\" ] && http POST 'https://insights-receiver.semaphoreci.com/job_reports?job_hash_id=4a44f833-e319-4105-a9d2-05a8aaaa1748&build_hash_id=16b2aaea-d20f-41fc-b316-2493860e5e8a&project_hash_id=72a608c6-7f66-4413-9162-837ab55f7e7b' rspec:=@rspec_report.json || true",
+                                                            "command_hash": null
+                                                                    },
+                                        {
+                                                  "index": 2,
+                                                          "command_string": "cat /home/runner/test_booster_error.log || true",
+                                                                  "command_hash": null
+                                                                          }
+                          ]
+                              }
