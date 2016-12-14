@@ -56,7 +56,7 @@
         "build_commands": [
               {
                         "index": 0,
-                                "command_string": "cucumber_booster --thread 3",
+                                "command_string": "echo this ia a build command",
                                         "command_hash": "ff42af62-c0e7-4700-aaaf-6e4647b28a50"
                                                 }
     ],

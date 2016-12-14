@@ -1,11 +1,7 @@
 defmodule Wizard.Runner do
-  alias Wizard.Parser
-
-  def execute(job) do
-    commands = Parser.commands
-
+  def execute(commands) do
     Enum.each commands, fn(command) ->
-      IO.puts :os.cmd(command |> String.to_char_list)
+      IO.puts :os.cmd(command["command_string"] |> String.to_char_list)
     end
   end
 end
