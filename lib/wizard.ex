@@ -4,6 +4,6 @@ defmodule Wizard do
   end
 
   def process(args) do
-
+    IO.puts args
   end
 end
