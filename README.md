@@ -1,20 +1,24 @@
 # Wizard
 
-**TODO: Add description**
+Runs shell commands from specifically formatted JSON file.
 
-## Installation
+## Usage
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+To make wizard script, clone this repository to your local machine and run
+```bash
+mix escript.build
+```
 
-  1. Add wizard to your list of dependencies in `mix.exs`:
+Then you can test run it with, for ex:
 
-        def deps do
-          [{:wizard, "~> 0.0.1"}]
-        end
+```bash
+./wizard run build_commands
+```
+and it will run the build commands (they are `echo` only) from the `jobs.json`
+file.
 
-  2. Ensure wizard is started before your application:
+Or:
 
-        def application do
-          [applications: [:wizard]]
-        end
-
+```bash
+./wizard where is my pizza
+```
