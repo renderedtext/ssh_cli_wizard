@@ -4,7 +4,7 @@ defmodule Wizard do
   alias Wizard.Job
 
   def main(args) when args == [] do
-    IO.puts "You're killing me here. You have to tell me what to do"
+    general_help_message
   end
 
   def main(args) do
@@ -18,12 +18,16 @@ defmodule Wizard do
           if job.commands |> Map.has_key?(command_set) do
             Job.command_set(job, command_set) |> Runner.execute
           else
-            IO.puts "These are not the droids you're looking for. There are no such commands."
+            IO.puts "This command set doesn't exist"
           end
       "show" ->
           Job.show(job)
        _ ->
-          IO.puts "You can only run or show commands. This is not a drill."
+         general_help_message
     end
+  end
+
+  def general_help_message do
+    IO.puts 'You can see all command sets by running "./wizard show"\nYou can run a command set by running "./wizard run command_set_name"'
   end
 end
