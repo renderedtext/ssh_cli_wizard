@@ -3,6 +3,10 @@ defmodule Wizard do
   alias Wizard.Runner
   alias Wizard.Job
 
+  def main(args) when args == [] do
+    IO.puts "You're killing me here. You have to tell me what to do"
+  end
+
   def main(args) do
     job = Decoder.execute
 
