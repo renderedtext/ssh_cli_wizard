@@ -1,4 +1,6 @@
 defmodule Wizard.Job do
+  alias Wizard.Format
+
   defstruct [:commands]
 
   def show(job) do
@@ -14,7 +16,8 @@ defmodule Wizard.Job do
   end
 
   defp show_command_set(job, command_set) do
-    IO.puts [IO.ANSI.bright, "#{command_set}:", IO.ANSI.reset]
+    IO.puts Format.bold("#{command_set}:")
+
     build_setup_commands = command_set(job, command_set)
     Enum.each build_setup_commands, fn(command) ->
       IO.puts command["command_string"]
