@@ -1,4 +1,4 @@
-defmodule Wizard.Commands do
+defmodule Wizard.Job do
   defstruct [:commands]
 
   def show(job) do
