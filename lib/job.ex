@@ -1,27 +1,54 @@
 defmodule Wizard.Job do
-  alias Wizard.Format
 
-  defstruct [:commands]
+  @base_path "/var/run/commands"
 
-  def show(job) do
-    IO.puts "Commands you can run as a set:\n"
-    show_command_set job, "build_setup_commands"
-    show_command_set job, "build_commands"
-    show_command_set job, "post_build_commands"
+  def show do
+    IO.puts "Setup Commands:"
+    "build_setup_commands" |> load_commands |> Enum.map(&IO.puts/1)
+
+    IO.puts "Job Commands:"
+    "build_commands"       |> load_commands |> Enum.map(&IO.puts/1)
+
+    IO.puts "Post Job Commands:"
+    "post_build_commands"  |> load_commands |> Enum.map(&IO.puts/1)
   end
 
-  def command_set(job, command_set) do
-    job.commands
-    |> Map.get(command_set)
+  def execute_setup_commands do
+    "build_setup_commands" |> load_commands |> Enum.each(&execute/1)
   end
 
-  defp show_command_set(job, command_set) do
-    IO.puts Format.bold("#{command_set}:")
+  def execute_job do
+    "build_commands" |> load_commands |> Enum.each(&execute/1)
+  end
 
-    build_setup_commands = command_set(job, command_set)
-    Enum.each build_setup_commands, fn(command) ->
-      IO.puts command["command_string"]
+  def execute_post_job do
+    "post_build_commands" |> load_commands |> Enum.each(&execute/1)
+  end
+
+  def execute_everything do
+    execute_setup_commands
+    execute_job
+    execute_post_job
+  end
+
+  defp execute(command) do
+    IO.puts "---> #{command}"
+
+    {result, exit_status} = System.cmd("sh", ["-c", command], into: IO.stream(:stdio, :line))
+
+    if exit_status != 0 do
+      IO.puts ""
+      IO.puts "\e[31mError while running command.\e\[0m"
+      System.halt(1)
     end
-    IO.puts ""
+
+    result
+  end
+
+  defp load_commands(filename) do
+    "#{@base_path}/#{filename}"
+    |> File.read!
+    |> Poison.Parser.parse!
+    |> Enum.map(fn(cmd) -> cmd["command_string"] end)
   end
 end
