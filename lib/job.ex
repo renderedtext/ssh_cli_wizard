@@ -46,9 +46,14 @@ defmodule Wizard.Job do
   end
 
   defp load_commands(filename) do
-    "#{@base_path}/#{filename}"
-    |> File.read!
-    |> Poison.Parser.parse!
-    |> Enum.map(fn(cmd) -> cmd["command_string"] end)
+    json = "#{@base_path}/#{filename}" |> File.read!
+
+    if String.length(json) == 0 do
+      []
+    else
+      json
+      |> Poison.Parser.parse!
+      |> Enum.map(fn(cmd) -> cmd["command_string"] end)
+    end
   end
 end
