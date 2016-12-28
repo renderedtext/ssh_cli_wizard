@@ -1,4 +1,5 @@
 defmodule Wizard.Job do
+  alias Wizard.Format
 
   @base_path "/var/run/commands"
 
@@ -32,19 +33,21 @@ defmodule Wizard.Job do
   end
 
   defp execute(command) do
-    IO.puts "---> #{command}"
+    IO.puts [Format.bold("command: "), "#{command}"]
 
     {duration, {result, exit_status}} = :timer.tc(fn ->
       System.cmd("sh", ["-c", command], into: IO.stream(:stdio, :line))
     end)
 
+    IO.puts [Format.bold("duration: "), "#{duration/1_000_000} seconds"]
+
     if exit_status != 0 do
-      IO.puts ""
-      IO.puts "\e[31mError while running command.\e\[0m"
+      IO.puts [Format.bold("exit status: "), Format.red("failed\n")]
       System.halt(1)
+    else
+      IO.puts [Format.bold("exit status: "), Format.green("passed\n")]
     end
 
-    IO.puts "#{duration/1_000_000} seconds"
     result
   end
 
