@@ -4,14 +4,17 @@ defmodule Wizard.Job do
   @base_path "/var/run/commands"
 
   def show do
-    IO.puts "Setup Commands:"
+    IO.puts [Format.bold("Setup Commands:")]
     "build_setup_commands" |> load_commands |> Enum.map(&IO.puts/1)
+    IO.puts ""
 
-    IO.puts "Job Commands:"
+    IO.puts [Format.bold("Job Commands:")]
     "build_commands"       |> load_commands |> Enum.map(&IO.puts/1)
+    IO.puts ""
 
-    IO.puts "Post Job Commands:"
+    IO.puts [Format.bold("Post Job Commands:")]
     "post_build_commands"  |> load_commands |> Enum.map(&IO.puts/1)
+    IO.puts ""
   end
 
   def execute_setup_commands do
