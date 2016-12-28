@@ -34,7 +34,9 @@ defmodule Wizard.Job do
   defp execute(command) do
     IO.puts "---> #{command}"
 
-    {result, exit_status} = System.cmd("sh", ["-c", command], into: IO.stream(:stdio, :line))
+    {duration, {result, exit_status}} = :timer.tc(fn ->
+      System.cmd("sh", ["-c", command], into: IO.stream(:stdio, :line))
+    end)
 
     if exit_status != 0 do
       IO.puts ""
@@ -42,6 +44,7 @@ defmodule Wizard.Job do
       System.halt(1)
     end
 
+    IO.puts "#{duration/1_000_000} seconds"
     result
   end
 
