@@ -12,7 +12,12 @@ defmodule Wizard do
   def main(_),        do: help
 
   def help do
-    IO.puts 'You can see all command sets by running "./wizard show"\n'
-    IO.puts 'You can run a command set by running "./wizard run command_set_name"'
+    IO.puts ""
+    IO.puts 'Welcome to the shh session little helper! Here is what you can do:\n'
+    IO.puts 'You can see all your build commands by running "semaphore show"\n'
+    IO.puts 'You can run setup commands by running "semaphore run setup"'
+    IO.puts 'You can run job commands by running "semaphore run job"'
+    IO.puts 'You can run post job commands by running "semaphore run post_job"\n'
+    IO.puts 'Also, to run all commands, simply run "semaphore run"\n'
   end
 end
