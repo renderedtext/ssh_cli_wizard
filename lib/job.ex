@@ -1,16 +1,20 @@
 defmodule Wizard.Job do
+  alias Wizard.Format
 
   @base_path "/var/run/commands"
 
   def show do
-    IO.puts "Setup Commands:"
+    IO.puts [Format.bold("Setup Commands:")]
     "build_setup_commands" |> load_commands |> Enum.map(&IO.puts/1)
+    IO.puts ""
 
-    IO.puts "Job Commands:"
+    IO.puts [Format.bold("Job Commands:")]
     "build_commands"       |> load_commands |> Enum.map(&IO.puts/1)
+    IO.puts ""
 
-    IO.puts "Post Job Commands:"
+    IO.puts [Format.bold("Post Job Commands:")]
     "post_build_commands"  |> load_commands |> Enum.map(&IO.puts/1)
+    IO.puts ""
   end
 
   def execute_setup_commands do
@@ -32,14 +36,19 @@ defmodule Wizard.Job do
   end
 
   defp execute(command) do
-    IO.puts "---> #{command}"
+    IO.puts [Format.bold("command: "), "#{command}"]
 
-    {result, exit_status} = System.cmd("sh", ["-c", command], into: IO.stream(:stdio, :line))
+    {duration, {result, exit_status}} = :timer.tc(fn ->
+      System.cmd("sh", ["-c", command], into: IO.stream(:stdio, :line))
+    end)
+
+    IO.puts [Format.bold("duration: "), "#{duration/1_000_000} seconds"]
 
     if exit_status != 0 do
-      IO.puts ""
-      IO.puts "\e[31mError while running command.\e\[0m"
+      IO.puts [Format.bold("exit status: "), Format.red("failed\n")]
       System.halt(1)
+    else
+      IO.puts [Format.bold("exit status: "), Format.green("passed\n")]
     end
 
     result
